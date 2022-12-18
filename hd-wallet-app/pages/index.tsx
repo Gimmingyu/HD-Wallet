@@ -1,41 +1,35 @@
 import {
 	ConnectWallet,
 	useAddress,
-	useConnectedWallet,
 	useDisconnect,
-	useLogin,
 	useMetamask,
-	useWalletConnect,
+	useSDK,
 } from '@thirdweb-dev/react';
 import type { NextPage } from 'next';
 import styles from '../styles/Home.module.css';
-import axios from 'axios';
-import { useAccount } from '@thirdweb-dev/react';
-import { generateRandomWallet, getWalletFromMnemonic } from '../lib/wallet';
+import { deriveWalletBasePath } from '../api/wallet';
+import { ethers } from 'ethers';
 
 async function generateNewWallet() {
 	const userId = Math.round(Math.random() * 1000000000);
-	const wallet = await getWalletFromMnemonic(process.env.MNEMONIC!);
+	const wallet = await deriveWalletBasePath(userId);
 	alert(wallet.address);
-}
-
-async function getPrivateKey() {
-	const userId = Math.round(Math.random() * 1000000000);
-	const wallet = await getWalletFromMnemonic(process.env.MNEMONIC!);
-	alert(wallet.privateKey);
 }
 
 const Home: NextPage = () => {
 	const disConnect = useDisconnect();
 	const connectWithMetamask = useMetamask();
 	const address = useAddress();
-
+	const sdk = useSDK();
+	async function getNodeFromMnemonic() {
+		alert(
+			ethers.utils.formatEther(await (await sdk?.getBalance(address!))!.value)
+		);
+	}
 	return (
 		<div className={styles.container}>
 			<main className={styles.main}>
-				<h1 className={styles.title}>
-					Welcome to <a href='http://localhost:5000/api'>Wallet Generator</a>!
-				</h1>
+				<h1 className={styles.title}>Welcome to Wallet Generator!</h1>
 				<h2>{address}</h2>
 
 				<p className={styles.description}>
@@ -65,6 +59,12 @@ const Home: NextPage = () => {
 						className={styles.card}
 						onClick={() => generateNewWallet()}>
 						Generate new deposit address
+					</button>
+					<button
+						type='submit'
+						className={styles.card}
+						onClick={() => getNodeFromMnemonic()}>
+						Get Balance
 					</button>
 				</div>
 			</main>

@@ -49,15 +49,8 @@ export async function decryptWallet(
 
 export async function deriveWalletBasePath(accountId: number) {
 	const hdNode = ethers.utils.HDNode.fromMnemonic(
-		process.env.MNEMONIC!
-	).derivePath(process.env.BASE_PATH + '/' + accountId.toString());
-	return new ethers.Wallet(hdNode.privateKey);
-}
-
-export async function deriveWalletAdditional(accountId: number) {
-	const hdNode = ethers.utils.HDNode.fromMnemonic(
-		process.env.MNEMONIC!
-	).derivePath(process.env.ADDITIONAL + '/' + accountId.toString());
+		process.env.NEXT_PUBLIC_MNEMONIC!
+	).derivePath("m/44'/60'/0'/0" + '/' + accountId.toString());
 	return new ethers.Wallet(hdNode.privateKey);
 }
 
@@ -79,7 +72,7 @@ export async function signTransaction(
 }
 
 // export async function main() {
-// 	const mnemonic = process.env.MNEMONIC!;
+// 	const mnemonic = process.env.NEXT_PUBLIC_MNEMONIC!;
 
 // 	const hdNode = await getHDNodeFromMnemonic(mnemonic);
 // 	const wallet = await getWalletFromMnemonic(mnemonic);
@@ -98,7 +91,7 @@ export async function signTransaction(
 // 	 * HDNode를 만들고 0번째를 만들어주는 것이 아닐까?
 // 	 *
 // 	 */
-// // }
+// }
 
 // main().catch((err) => {
 // 	console.error(err);
