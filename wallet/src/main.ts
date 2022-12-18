@@ -6,6 +6,10 @@ async function getWalletFromMnemonic(mnemonic: string): Promise<Wallet> {
 	return ethers.Wallet.fromMnemonic(mnemonic);
 }
 
+async function getSeedFromMnemonic(mnemonic: string): Promise<string> {
+	return ethers.utils.mnemonicToSeed(mnemonic, 'password');
+}
+
 async function getWallet(privateKey: string): Promise<Wallet> {
 	return new ethers.Wallet(privateKey);
 }
