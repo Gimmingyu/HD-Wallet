@@ -6,6 +6,10 @@ async function getWalletFromMnemonic(mnemonic: string): Promise<Wallet> {
 	return ethers.Wallet.fromMnemonic(mnemonic);
 }
 
+async function getWallet(privateKey: string): Promise<Wallet> {
+	return new ethers.Wallet(privateKey);
+}
+
 async function getHDNodeFromMnemonic(mnemonic: string): Promise<HDNode> {
 	return ethers.utils.HDNode.fromMnemonic(mnemonic);
 }
@@ -72,7 +76,7 @@ async function main() {
 	const wallet = await getWalletFromMnemonic(mnemonic);
 
 	console.log(await wallet.getAddress());
-	console.log(wallet.privateKey);
+	console.log(wallet.address);
 
 	const node = await getHDNodeFromMnemonic(mnemonic);
 	console.log(node.address);
@@ -84,10 +88,26 @@ async function main() {
 	let walletDecrypted = await decryptWallet(walletEncrypted, password);
 	console.log(walletDecrypted);
 
-	console.log(await (await deriveWalletAdditional(0)).getAddress());
-	console.log(await (await deriveWalletAdditional(0)).privateKey);
-	console.log(await (await deriveWalletBasePath(1)).getAddress());
-	console.log(await (await deriveWalletBasePath(2)).getAddress());
+	const childWallet0 = await deriveWalletBasePath(0);
+	console.log(
+		childWallet0.address,
+		childWallet0.privateKey,
+		childWallet0.publicKey
+	);
+
+	const childWallet1 = await deriveWalletBasePath(1);
+	console.log(
+		childWallet1.address,
+		childWallet1.privateKey,
+		childWallet1.publicKey
+	);
+
+	const childWallet2 = await deriveWalletBasePath(2);
+	console.log(
+		childWallet2.address,
+		childWallet2.privateKey,
+		childWallet2.publicKey
+	);
 }
 
 main().catch((err) => {
