@@ -11,27 +11,24 @@ import type { NextPage } from 'next';
 import styles from '../styles/Home.module.css';
 import axios from 'axios';
 import { useAccount } from '@thirdweb-dev/react';
+import { generateRandomWallet, getWalletFromMnemonic } from '../lib/wallet';
 
 async function generateNewWallet() {
 	const userId = Math.round(Math.random() * 1000000000);
-
-	const res = await axios.get(`/deposit/public/${userId}`);
-	alert(res.data.result.publicKey);
-	return res.data.result.publicKey;
+	const wallet = await getWalletFromMnemonic(process.env.MNEMONIC!);
+	alert(wallet.address);
 }
 
 async function getPrivateKey() {
 	const userId = Math.round(Math.random() * 1000000000);
-	const res = await axios.get(`/deposit/private/${userId}`);
-	alert(res.data.result.privateKey);
-	return res.data.result.privateKey;
+	const wallet = await getWalletFromMnemonic(process.env.MNEMONIC!);
+	alert(wallet.privateKey);
 }
 
 const Home: NextPage = () => {
 	const disConnect = useDisconnect();
 	const connectWithMetamask = useMetamask();
 	const address = useAddress();
-	const account = useAccount();
 
 	return (
 		<div className={styles.container}>
